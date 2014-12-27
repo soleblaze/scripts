@@ -9,7 +9,8 @@
   task
 
 * flush-agents - systemd script used to flush ssh-agent and gpg-agent when
-  laptop is put to sleep.  To use copy flush-agent.sh to /usr/local/sbin,
+  laptop is put to sleep.  To use change the user variable in flush-agent.sh
+  and copy it to /usr/local/sbin,
   flush-agents.service to /etc/systemd/system, and run sudo systemctl enable
   flush-agents 
 
