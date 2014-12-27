@@ -1,0 +1,10 @@
+[Unit]
+Description=Flush ssh-agent and gpg-agent on sleep
+Before=sleep.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/flush-agents.sh
+
+[Install]
+WantedBy=sleep.target

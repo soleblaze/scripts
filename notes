@@ -1,0 +1,70 @@
+#!/bin/bash
+
+notebookdir=~/Documents/notes
+
+# Check to see if proper arguments are passed
+if [ -z "$1" -o "$2" ]; then
+    echo "Usage: notes [notebook]"
+    exit 1
+fi
+
+# Check to see if notebook exists
+# offer to create it if it doesn't
+if [ ! -d "$notebookdir/$1" ]; then
+    echo -n "$1 does not exist.  Would you like to create it? (y/n): "
+    read answer
+    if [ "$answer" = "y" ]; then
+        echo "Creating notebook: $1"
+        mkdir -p "$notebookdir/$1"
+        cd "$notebookdir/$1"
+        git init
+        echo -e ".gitignore\n.nvim" > .gitignore
+        echo "Notebook: $1" > README
+        git add README
+        git commit -m "Initial Commit"
+    else
+        echo "Not creating notebook $1."
+        exit 0
+    fi
+fi
+
+# check to see if notebook is already in use
+nvimprocesses="$( ps -fC vim | awk '/NVIM_init/ {print $2}')"
+
+for pid in $nvimprocesses; do
+    notebook="$(readlink -f /proc/$pid/cwd | sed "s|${notebookdir}/||")"
+    if [ "$notebook" = "$1" ] ; then
+        echo "Error: notebook $1 is already open."
+        exit 2
+    fi
+done
+
+cd "$notebookdir/$1"
+
+# run git pull if git has a remote directory and is being used with the notebook
+if [ "$(git remote -v)" ]; then
+    git pull -u origin master
+fi 2>/dev/null
+
+# Check to see if tmux is running (uses screen-256color as TERM)
+# If it is running then rename the window to be the nvim directory being used
+if [ "$TMUX_PANE" ]; then
+    tmux rename-window $1
+fi
+
+# If any changes were pulled from git then rebuild nvim database
+if [ "$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)" ]; then
+    vim -c 'exec NVIM_init()' -c 'python nvimdb.rebuild_database()'
+else
+    vim -c 'exec NVIM_init()'
+fi 2>/dev/null
+
+# If any changes were done then commit them
+if [ -z "$(git status | grep 'nothing to commit, working directory clean')" ]; then
+    git add *
+    git commit -m 'auto notes update'
+fi 2>/dev/null
+# If this git repo has a remove origin then push changes
+if [ "$(git remote -v)" ]; then
+    git push -u origin master
+fi

@@ -1,0 +1,21 @@
+#!/bin/zsh
+if [ "$(xrandr | grep 'DP2 connected')" -a "$(xrandr | grep LVDS1 | grep 1366)" ] ; then
+    # Dual Monitors
+    # DPI for these monitors is actually 109, but that makes fonts too small
+    xrandr --output LVDS1 --off
+    xrandr --dpi 125 --output DP2 --auto --output DP3 --auto --left-of DP2
+    dispwin -d1 ~/.config/colors/U2713HM\ 2014-05-10\ 2.2\ M-S\ XYZLUT+MTX.icc
+    dispwin -d2 ~/.config/colors/LED\ Cinema\ 2014-05-10\ 2.2\ M-S\ XYZLUT+MTX.icc
+    xrdb -merge ~/.Xresources27
+else
+    # Internal Monitor
+    xrandr --output DP2 --off
+    xrandr --output DP3 --off
+    xrandr --output LVDS1 --auto --dpi 125
+    dispwin ~/.config/colors/"LP125WH2-SLB3 2014-04-12 2.2 M-S XYZLUT+MTX.icc"
+    xrdb -merge ~/.Xresources
+fi
+
+# Re run this in case the dock had a keyboard attached
+xmodmap ~/.Xmodmap
+xcape -e 'Control_R=Escape'

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+current="$(~/bin/doing last | grep -v @done)"
+
+if [[ "$current" ]]; then
+    doing done
+fi
+
+doing now $*
