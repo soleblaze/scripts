@@ -1,5 +1,6 @@
 #!/usr/bin/zsh
 
+# Prints out if there is new mail
 function checkmail() {
     maildir="$1"
     email="$2"
@@ -20,4 +21,5 @@ function checkmail() {
     fi
 }
 
+# checkmail [path to mailbox] [email address for mailbox]
 checkmail ~/.mail/Inbox/new email@example.com
