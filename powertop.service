@@ -1,0 +1,11 @@
+[Unit]
+Description=PowerTop
+
+[Service] 
+Type=simple
+RemainAfterExit=yes 
+Environment="TERM=xterm"
+ExecStart=/usr/sbin/powertop --auto-tune
+
+[Install] 
+WantedBy=multi-user.target
