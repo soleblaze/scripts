@@ -5,13 +5,13 @@ if [ "$(xrandr | grep 'DP3 connected' | grep -v "2560x1440")" ] ; then
     # DPI for this monitor is actually 109, but that makes the fonts too small
 #    xrandr --output LVDS1 --off
     xrandr --dpi 125 --output DP3 --auto --output LVDS1 --off
-    dispwin -d1 ~/.config/colors/U2713HM\ 2014-05-10\ 2.2\ M-S\ XYZLUT+MTX.icc
+    dispwin -d1 ~/.config/colors/desktop.icc
     xrdb -merge ~/.Xresources27
 else
     # Internal Monitor
 #    xrandr --output DP3 --off
     xrandr --dpi 125 --output LVDS1 --auto --output DP3 --off
-    dispwin ~/.config/colors/"LP125WH2-SLB3 2014-04-12 2.2 M-S XYZLUT+MTX.icc"
+    dispwin ~/.config/colors/laptop.icc
     xrdb -merge ~/.Xresources
 fi
  
