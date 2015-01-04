@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Runs a command wrapped with btrfs pre-post snapshots.
+log_path="/var/log/snp"
+date=$(date "+%Y-%m-%d-%H%M%S")
+log_file="${log_path}/snp_${date}.log"
+
+sudo pacman -Sy 
+
+snapshot_nbr=$(sudo snapper create --type=pre --cleanup-algorithm=number --print-number --description="pacaur update")
+echo -e "> New pre snapshot with number ${snapshot_nbr}."
+ 
+pacaur -Su 
+ 
+snapshot_nbr=$(sudo snapper create --type=post --cleanup-algorithm=number --print-number --pre-number="$snapshot_nbr")
+echo -e "\n> New post snapshot with number ${snapshot_nbr}."
