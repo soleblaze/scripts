@@ -6,7 +6,8 @@ if [ "$(xrandr | grep 'DP3 connected' | grep -v "2560x1440")" ] ; then
 #    xrandr --output LVDS1 --off
     xrandr --dpi 125 --output DP3 --auto --output LVDS1 --off
     dispwin -d1 ~/.config/colors/desktop.icc
-    xrdb -merge ~/.Xresources27
+    xrdb -merge ~/.Xresources
+    echo 'Xft.dpi: 145' | xrdb -merge
 else
     # Internal Monitor
 #    xrandr --output DP3 --off
