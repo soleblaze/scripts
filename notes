@@ -1,6 +1,6 @@
 #!/bin/bash
 
-notebookdir=~/Documents/notes
+notebookdir=~/notes
 
 # Check to see if proper arguments are passed
 if [ -z "$1" -o "$2" ]; then
