@@ -1,17 +1,17 @@
 #!/usr/bin/bash
 
 # Setup Monitors
-if [ "$(xrandr | grep 'DP3 connected' | grep -v "2560x1440")" ] ; then
+if [ "$(xrandr | grep '^DP1 connected' | grep -v "2560x1440")" ] ; then
     # DPI for this monitor is actually 109, but that makes the fonts too small
 #    xrandr --output LVDS1 --off
-    xrandr --dpi 125 --output DP3 --auto --output LVDS1 --off
+    xrandr --dpi 125 --output DP1 --auto --output eDP1 --off
     dispwin -d1 ~/.config/colors/desktop.icc
     xrdb -merge ~/.Xresources
     echo 'Xft.dpi: 145' | xrdb -merge
 else
     # Internal Monitor
 #    xrandr --output DP3 --off
-    xrandr --dpi 125 --output LVDS1 --auto --output DP3 --off
+    xrandr --dpi 125 --output eDP1 --auto --output DP1 --off
     dispwin ~/.config/colors/laptop.icc
     xrdb -merge ~/.Xresources
 fi
