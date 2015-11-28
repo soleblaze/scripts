@@ -1,5 +1,5 @@
 #!/bin/zsh
 while true; do
-    sleep 10m
+    sleep 15m
     mbsync -a
 done
