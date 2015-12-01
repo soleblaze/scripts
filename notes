@@ -3,7 +3,7 @@
 notebookdir=~/notes
 
 # Check to see if proper arguments are passed
-if [ -z "$1" -o "$2" ]; then
+if [ -z "$1" ] || [ "$2" ]; then
     echo "Usage: notes [notebook]"
     exit 1
 fi
@@ -12,11 +12,11 @@ fi
 # offer to create it if it doesn't
 if [ ! -d "$notebookdir/$1" ]; then
     echo -n "$1 does not exist.  Would you like to create it? (y/n): "
-    read answer
+    read -r answer
     if [ "$answer" = "y" ]; then
         echo "Creating notebook: $1"
         mkdir -p "$notebookdir/$1"
-        cd "$notebookdir/$1"
+        cd "$notebookdir/$1" || exit
         git init
         echo -e ".gitignore\n.nvim" > .gitignore
         echo "Notebook: $1" > README
@@ -32,14 +32,14 @@ fi
 nvimprocesses="$( ps -fC vim | awk '/NVIM_init/ {print $2}')"
 
 for pid in $nvimprocesses; do
-    notebook="$(readlink -f /proc/$pid/cwd | sed "s|${notebookdir}/||")"
+    notebook="$(readlink -f "/proc/$pid/cwd" | sed "s|${notebookdir}/||")"
     if [ "$notebook" = "$1" ] ; then
         echo "Error: notebook $1 is already open."
         exit 2
     fi
 done
 
-cd "$notebookdir/$1"
+cd "$notebookdir/$1" || exit
 
 # run git pull if git has a remote directory and is being used with the notebook
 if [ "$(git remote -v)" ]; then
@@ -49,7 +49,7 @@ fi 2>/dev/null
 # Check to see if tmux is running (uses screen-256color as TERM)
 # If it is running then rename the window to be the nvim directory being used
 if [ "$TMUX_PANE" ]; then
-    tmux rename-window $1
+    tmux rename-window "$1"
 fi
 
 # If any changes were pulled from git then rebuild nvim database
@@ -60,11 +60,11 @@ else
 fi 2>/dev/null
 
 # If any changes were done then commit them
-if [ -z "$(git status | grep 'nothing to commit, working directory clean')" ]; then
-    git add *
+if git status | grep -q 'nothing to commit, working directory clean'; then
+    git add ./*
     git commit -m 'auto notes update'
 fi 2>/dev/null
 # If this git repo has a remove origin then push changes
 if [ "$(git remote -v)" ]; then
     git push -u origin master
-fi
+fi 2>/dev/null
