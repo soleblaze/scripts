@@ -4,7 +4,7 @@ log_path="/var/log/snp"
 date=$(date "+%Y-%m-%d-%H%M%S")
 log_file="${log_path}/snp_${date}.log"
 
-sudo pacman -Sy 
+sudo pacman -Syu 
 
 snapshot_nbr=$(sudo snapper create --type=pre --cleanup-algorithm=number --print-number --description="pacaur update")
 echo -e "> New pre snapshot with number ${snapshot_nbr}."
