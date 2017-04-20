@@ -1,0 +1,2 @@
+#!/bin/zsh
+tmux new -s termite1 || tmux new -s termite2 || tmux attach -t termite1
