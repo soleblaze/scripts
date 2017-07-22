@@ -1,6 +1,5 @@
 #!/bin/bash
 
-output="$(task projects | egrep -v '(Project|projects|---)' | \
-awk '{print $1}' | sed '/^$/d' | rofi -dmenu -p 'TaskWarrior: ')"
+output="$(todo.py projects | rofi -dmenu -p 'Todoist: ')"
 
-task add project:$output
+todo.py add $output
